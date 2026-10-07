@@ -174,8 +174,6 @@
 <body>
   <main class="container">
     <section class="card">
-      <h1 class="title">QVCラウンジメンバー登録</h1>
-
       <p class="description">お客様のお名前をご入力ください。
 入力後、送信ボタンを押すと登録情報が送信されます。</p>
 
@@ -219,9 +217,6 @@
 
       <div id="statusText" class="status" aria-live="polite"></div>
 
-      <p class="note">
-        ※ LINEアプリ内での利用を前提としています。
-      </p>
     </section>
   </main>
 
@@ -294,7 +289,7 @@
           "【QVCラウンジ登録情報】",
           `名前（漢字）：${nameKanji}`,
           `名前（かな）：${nameKana}`,
-          `LINE userId：${userId}`
+          `LINE 識別id：${userId}`
         ].join("\n");
       }
 
