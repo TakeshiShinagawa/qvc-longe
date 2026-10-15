@@ -411,6 +411,10 @@
         };
       }
 
+      function escapeCsvValue(value) {
+        return `"${String(value ?? "").replace(/"/g, '""')}"`;
+      }
+
       function buildOpsTextMessage(displayName, nameKanji, nameKana, userId) {
         return {
           type: "text",
