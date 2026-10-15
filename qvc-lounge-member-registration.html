@@ -284,13 +284,131 @@
         };
       }
 
-      function buildMessageText(nameKanji, nameKana, userId) {
-        return [
-          "【QVCラウンジ登録情報】",
-          `名前（漢字）：${nameKanji}`,
-          `名前（かな）：${nameKana}`,
-          `LINE 識別id：${userId}`
-        ].join("\n");
+      function buildFlexMessage(nameKanji, nameKana, userId) {
+        return {
+          type: "flex",
+          altText: `QVCラウンジ登録情報 名前（漢字）:${nameKanji} 名前（かな）:${nameKana} LINE userId:${userId}`,
+          contents: {
+            type: "bubble",
+            size: "mega",
+            header: {
+              type: "box",
+              layout: "horizontal",
+              backgroundColor: "#28334A",
+              paddingTop: "12px",
+              paddingBottom: "12px",
+              paddingStart: "18px",
+              paddingEnd: "18px",
+              spacing: "md",
+              contents: [
+                {
+                  type: "image",
+                  url: "https://takeshishinagawa.github.io/img/qvc_logo_liff.png",
+                  size: "28px",
+                  aspectMode: "fit",
+                  aspectRatio: "1:1",
+                  flex: 0,
+                  gravity: "center"
+                },
+                {
+                  type: "text",
+                  text: "QVCラウンジ登録情報",
+                  weight: "bold",
+                  size: "lg",
+                  color: "#FFFFFF",
+                  gravity: "center",
+                  wrap: false,
+                  flex: 1
+                }
+              ]
+            },
+            body: {
+              type: "box",
+              layout: "vertical",
+              backgroundColor: "#FBF6F3",
+              paddingTop: "18px",
+              paddingBottom: "14px",
+              paddingStart: "20px",
+              paddingEnd: "20px",
+              spacing: "md",
+              contents: [
+                {
+                  type: "box",
+                  layout: "baseline",
+                  spacing: "md",
+                  contents: [
+                    {
+                      type: "text",
+                      text: "お名前",
+                      size: "sm",
+                      color: "#62696F",
+                      flex: 2
+                    },
+                    {
+                      type: "text",
+                      text: nameKanji,
+                      size: "lg",
+                      weight: "bold",
+                      color: "#28334A",
+                      wrap: true,
+                      flex: 5
+                    }
+                  ]
+                },
+                {
+                  type: "box",
+                  layout: "baseline",
+                  spacing: "md",
+                  contents: [
+                    {
+                      type: "text",
+                      text: "おなまえ",
+                      size: "sm",
+                      color: "#62696F",
+                      flex: 2
+                    },
+                    {
+                      type: "text",
+                      text: nameKana,
+                      size: "lg",
+                      weight: "bold",
+                      color: "#28334A",
+                      wrap: true,
+                      flex: 5
+                    }
+                  ]
+                }
+              ]
+            },
+            footer: {
+              type: "box",
+              layout: "vertical",
+              backgroundColor: "#EAD8CF",
+              paddingTop: "6px",
+              paddingBottom: "8px",
+              paddingStart: "18px",
+              paddingEnd: "18px",
+              contents: [
+                {
+                  type: "text",
+                  text: userId,
+                  size: "xxs",
+                  color: "#B8ADA6",
+                  wrap: false
+                },
+                {
+                  type: "text",
+                  text: "QVCラウンジ事務局",
+                  size: "sm",
+                  weight: "bold",
+                  align: "end",
+                  color: "#28334A",
+                  margin: "sm"
+                }
+              ]
+            }
+          }
+        };
       }
 
       async function initializeLiff() {
@@ -342,14 +460,8 @@
 
       async function sendRegistrationMessage(nameKanji, nameKana) {
         const userId = await getUserId();
-        const text = buildMessageText(nameKanji, nameKana, userId);
-
-        await liff.sendMessages([
-          {
-            type: "text",
-            text: text
-          }
-        ]);
+        const flexMessage = buildFlexMessage(nameKanji, nameKana, userId);
+        await liff.sendMessages([flexMessage]);
       }
 
       form.addEventListener("submit", async (event) => {
