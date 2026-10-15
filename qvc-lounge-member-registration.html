@@ -236,6 +236,26 @@
       const DEFAULT_SEND_ERROR_MESSAGE =
         "送信に失敗しました。通信状況を確認のうえ、もう一度お試しください。";
 
+      function getReadableErrorMessage(error) {
+        if (!error) {
+          return DEFAULT_SEND_ERROR_MESSAGE;
+        }
+
+        if (typeof error === "string") {
+          return error;
+        }
+
+        if (error.message && typeof error.message === "string") {
+          return error.message;
+        }
+
+        try {
+          return JSON.stringify(error, null, 2);
+        } catch {
+          return DEFAULT_SEND_ERROR_MESSAGE;
+        }
+      }
+
       function showError(message) {
         errorMessage.textContent = message;
         errorMessage.classList.add("is-visible");
@@ -477,21 +497,6 @@
         }
       }
 
-      async function getUserId() {
-        try {
-          const profile = await liff.getProfile();
-
-          if (!profile || !profile.userId) {
-            throw new Error("userId を取得できませんでした。");
-          }
-
-          return profile.userId;
-        } catch (error) {
-          console.error("getProfile error:", error);
-          throw new Error("LINE userId の取得に失敗しました。");
-        }
-      }
-
       async function sendRegistrationMessage(nameKanji, nameKana) {
         const { userId, displayName } = await getProfileInfo();
         const flexMessage = buildFlexMessage(nameKanji, nameKana, userId);
@@ -522,8 +527,8 @@
           setStatus("送信が完了しました。");
           await liff.closeWindow();
         } catch (error) {
-          console.error("sendMessages error:", error);
-          showError(DEFAULT_SEND_ERROR_MESSAGE);
+          const debugMessage = getReadableErrorMessage(error);
+          showError("送信に失敗しました。\n\n" + debugMessage);
           setStatus("");
         } finally {
           setSubmitting(false);
