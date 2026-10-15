@@ -411,6 +411,24 @@
         };
       }
 
+      async function getProfileInfo() {
+        try {
+          const profile = await liff.getProfile();
+
+          if (!profile || !profile.userId) {
+            throw new Error("userId を取得できませんでした。");
+          }
+
+          return {
+            userId: profile.userId,
+            displayName: profile.displayName || ""
+          };
+        } catch (error) {
+          console.error("getProfile error:", error);
+          throw new Error("LINEプロフィール情報の取得に失敗しました。");
+        }
+      }
+
       function escapeCsvValue(value) {
         return `"${String(value ?? "").replace(/"/g, '""')}"`;
       }
