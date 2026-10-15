@@ -411,6 +411,18 @@
         };
       }
 
+      function buildOpsTextMessage(displayName, nameKanji, nameKana, userId) {
+        return {
+          type: "text",
+          text: [
+            displayName,
+            nameKanji,
+            nameKana,
+            userId
+          ].map(escapeCsvValue).join(",")
+        };
+      }
+
       async function initializeLiff() {
         if (typeof liff === "undefined") {
           showError("LIFF SDK が読み込まれていません。");
@@ -459,9 +471,10 @@
       }
 
       async function sendRegistrationMessage(nameKanji, nameKana) {
-        const userId = await getUserId();
+        const { userId, displayName } = await getProfileInfo();
         const flexMessage = buildFlexMessage(nameKanji, nameKana, userId);
-        await liff.sendMessages([flexMessage]);
+        const opsTextMessage = buildOpsTextMessage(displayName, nameKanji, nameKana, userId);
+        await liff.sendMessages([flexMessage, opsTextMessage]);
       }
 
       form.addEventListener("submit", async (event) => {
